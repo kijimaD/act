@@ -29,30 +29,36 @@ func main() {
 
 	repos, _ , _ := client.Repositories.List(ctx, "kijimaD", nil)
 	for _, r := range repos {
-		contributors, _, err := client.Repositories.ListContributorsStats(context.Background(), "kijimaD", *r.Name)
-		if err != nil {
-			panic(err)
+		// TODO: ContributionStatsは、キャッシュが未生成の場合少し待って再リトライしてあげないといけない
+		// contributors, _, err := client.Repositories.ListContributorsStats(context.Background(), "kijimaD", *r.Name)
+		// if err != nil {
+		// 	panic(err)
+		// }
+		// fmt.Println(*contributors[0].Total)
+
+		// ヌルポ対策
+		var desc string
+		var lang string
+		if r.Description == nil {
+			desc = ""
+		} else {
+			desc = *r.Description
+		}
+		if r.Language == nil {
+			lang = ""
+		} else {
+			lang = *r.Language
 		}
 
-		fmt.Println(string(*r.Name))
-		fmt.Println(*contributors[0].Total)
 		repo := Repo{
-			// string(*r.Name),
-			"a",
-			// string(*r.Description),
-			"a",
-			// string(*r.Language),
-			"a",
-			// *r.HTMLURL,
-			"a",
-			// *r.DefaultBranch,
-			"a",
-			// *r.ForksCount,
-			0,
-			// *r.StargazersCount,
-			0,
-			// *contributors[0].Total,
-			0,
+			*r.Name,
+			desc, // *r.Description,
+			lang, // *r.Language,
+			*r.HTMLURL,
+			*r.DefaultBranch,
+			*r.ForksCount,
+			*r.StargazersCount,
+			0, // *contributors[0].Total,
 		}
 		fmt.Println(repo)
 	}
