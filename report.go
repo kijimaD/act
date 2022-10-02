@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/olekukonko/tablewriter"
 	"os"
 	"strconv"
@@ -18,8 +19,22 @@ func newReport(in Scrape) *Report {
 	}
 }
 
-func (r *Report) execute() {
-	table := tablewriter.NewWriter(os.Stdout)
+func (r *Report) execute(c Config) {
+	output := os.Stdout
+
+	switch c.output {
+	case "output":
+		output = os.Stdout
+	case "file":
+		file, err := os.Create("README.md")
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer file.Close()
+		output = file
+	}
+
+	table := tablewriter.NewWriter(output)
 	table.SetHeader(r.headers())
 	table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
 	table.SetCenterSeparator("|")

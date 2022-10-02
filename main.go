@@ -11,8 +11,8 @@ type Config struct {
 	output string `yaml:"output"`
 }
 
-func newConfig() Config{
-	return Config {
+func newConfig() Config {
+	return Config{
 		output: "stdout",
 	}
 }
