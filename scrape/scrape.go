@@ -14,29 +14,32 @@ type Scrape struct {
 	config config.Config
 }
 
-func NewScrape(config config.Config) Scrape {
+func NewScrape(config config.Config) *Scrape {
 	var scrape Scrape
 	scrape.config = config
+	return &scrape
+}
 
+func (s *Scrape) Execute() *Scrape {
 	client := gh.New().Client
 	opt := &github.RepositoryListOptions{
 		ListOptions: github.ListOptions{PerPage: 100},
 	}
 
 	for {
-		repos, resp, err := client.Repositories.List(context.Background(), "kijimaD", opt)
+		repos, resp, err := client.Repositories.List(context.Background(), s.config.User, opt)
 		if err != nil {
 			panic(err)
 		}
 		for _, r := range repos {
 			commitCount := commitCount(*r.Name, *r.DefaultBranch)
-			scrape.Repos = append(scrape.Repos, NewRepo(r, commitCount))
+			s.Repos = append(s.Repos, NewRepo(r, commitCount))
 		}
 		if resp.NextPage == 0 {
 			break
 		}
 	}
-	return scrape
+	return s
 }
 
 func commitCount(reponame string, branch string) int {

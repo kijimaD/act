@@ -9,6 +9,7 @@ var defaultConfigFilePath = ".act.yml"
 
 // memo: 各フィールドはpublicである必要がある
 type Config struct {
+	User     string `yaml:"user"`
 	OutType  string `yaml:"outType"`
 	OutPath  string `yaml:"outPath"`
 	IsCommit bool   `yaml:"commit"`
@@ -18,6 +19,7 @@ type Config struct {
 func NewConfig() Config {
 	// default parameter
 	return Config{
+		User: "",
 		OutType: "stdout",
 		OutPath: "./README.md",
 		IsCommit:  false,
