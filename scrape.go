@@ -6,6 +6,10 @@ import (
 	"context"
 )
 
+type Scrape struct {
+	Repos []Repo
+}
+
 type Repo struct {
 	Name            string
 	Description     string
@@ -34,15 +38,14 @@ func newRepo(res *github.Repository) Repo {
 
 	result := Repo{
 		*res.Name,
-		desc, // *r.Description,
-		lang, // *r.Language,
+		desc,
+		lang,
 		*res.HTMLURL,
 		*res.DefaultBranch,
 		*res.ForksCount,
 		*res.StargazersCount,
 		0, // *contributors[0].Total,
 	}
-	fmt.Println(result)
 	return result
 }
 
