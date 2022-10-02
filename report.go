@@ -26,7 +26,7 @@ func (r *Report) execute() {
 	// 出力分岐を別の関数にしたいが、fileが空白になる
 	var output io.Writer
 
-	switch r.config.Output {
+	switch r.config.OutType {
 	case "stdout":
 		output = os.Stdout
 	case "file":
