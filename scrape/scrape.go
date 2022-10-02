@@ -54,8 +54,8 @@ func commitCount(reponame string, branch string) int {
 						TotalCount int
 					}
 				} `graphql:"... on Commit"`
-			} `graphql:"object(expression:\"master\")"`
-		} `graphql:"repository(owner: \"kijimaD\", name: \".emacs.d\")"`
+			}
+		}
 	}
 
 	err := client.Exec(context.Background(), query, &res, nil)
