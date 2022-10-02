@@ -1,9 +1,9 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/google/go-github/v47/github"
-	"context"
 )
 
 type Scrape struct {
@@ -19,6 +19,16 @@ type Repo struct {
 	ForksCount      int
 	StargazersCount int
 	CommitCount     int
+}
+
+func newScrape() Scrape {
+	var scrape Scrape
+	client := login()
+	repos, _, _ := client.Repositories.List(context.Background(), "kijimaD", nil)
+	for _, r := range repos {
+		scrape.Repos = append(scrape.Repos, newRepo(r))
+	}
+	return scrape
 }
 
 func newRepo(res *github.Repository) Repo {
