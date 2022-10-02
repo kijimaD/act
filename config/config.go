@@ -1,11 +1,11 @@
-package main
+package config
 
 import (
 	"github.com/go-yaml/yaml"
 	"os"
 )
 
-var DefaultConfigFilePath = ".act.yml"
+var defaultConfigFilePath = ".act.yml"
 
 // memo: 各フィールドはpublicである必要がある
 type Config struct {
@@ -15,7 +15,7 @@ type Config struct {
 	IsPush   bool   `yaml:"push"`
 }
 
-func newConfig() Config {
+func NewConfig() Config {
 	// default parameter
 	return Config{
 		OutType: "stdout",
@@ -25,8 +25,8 @@ func newConfig() Config {
 	}
 }
 
-func (c *Config) load(loadPath string) {
-	f, err := os.Open(loadPath)
+func (c *Config) Load() {
+	f, err := os.Open(defaultConfigFilePath)
 	if err != nil {
 		panic(err)
 	}

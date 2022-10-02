@@ -1,4 +1,4 @@
-package main
+package report
 
 import (
 	"fmt"
@@ -6,15 +6,17 @@ import (
 	"io"
 	"os"
 	"strconv"
+	"act/config"
+	"act/scrape"
 )
 
 type Report struct {
-	in     []Repo
+	in     []scrape.Repo
 	out    string
-	config Config
+	config config.Config
 }
 
-func newReport(in Scrape, config Config) *Report {
+func NewReport(in scrape.Scrape, config config.Config) *Report {
 	return &Report{
 		in:     in.Repos,
 		out:    "",
@@ -22,7 +24,7 @@ func newReport(in Scrape, config Config) *Report {
 	}
 }
 
-func (r *Report) execute() {
+func (r *Report) Execute() {
 	// 出力分岐を別の関数にしたいが、出力されない(空白のファイルになる)
 	var output io.Writer
 
@@ -59,6 +61,6 @@ func (r *Report) headers() []string {
 	return []string{"Name", "Description", "Language", "Forks", "Star", "Commit"}
 }
 
-func (r *Report) content(repo Repo) []string {
+func (r *Report) content(repo scrape.Repo) []string {
 	return []string{repo.MdLink(), repo.Description, repo.Language, strconv.Itoa(repo.ForksCount), strconv.Itoa(repo.StargazersCount), strconv.Itoa(repo.CommitCount)}
 }

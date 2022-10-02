@@ -1,11 +1,15 @@
 package main
 
-import ()
+import (
+	"act/config"
+	"act/report"
+	"act/scrape"
+)
 
 func main() {
-	config := newConfig()
-	config.load(DefaultConfigFilePath)
+	config := config.NewConfig()
+	config.Load()
 
-	scrape := newScrape(config)
-	newReport(scrape, config).execute()
+	scrape := scrape.NewScrape(config)
+	report.NewReport(scrape, config).Execute()
 }

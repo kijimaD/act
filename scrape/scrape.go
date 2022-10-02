@@ -1,4 +1,4 @@
-package main
+package scrape
 
 import (
 	"context"
@@ -7,18 +7,20 @@ import (
 	"github.com/hasura/go-graphql-client"
 	"golang.org/x/oauth2"
 	"os"
+	"act/config"
+	"act/utils"
 )
 
 type Scrape struct {
 	Repos  []Repo
-	config Config
+	config config.Config
 }
 
-func newScrape(config Config) Scrape {
+func NewScrape(config config.Config) Scrape {
 	var scrape Scrape
 	scrape.config = config
 
-	client := login()
+	client := utils.Login()
 	opt := &github.RepositoryListOptions{
 		ListOptions: github.ListOptions{PerPage: 100},
 	}
@@ -30,7 +32,7 @@ func newScrape(config Config) Scrape {
 		}
 		for _, r := range repos {
 			commitCount := commitCount(*r.Name, *r.DefaultBranch)
-			scrape.Repos = append(scrape.Repos, newRepo(r, commitCount))
+			scrape.Repos = append(scrape.Repos, NewRepo(r, commitCount))
 		}
 		if resp.NextPage == 0 {
 			break
