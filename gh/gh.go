@@ -6,6 +6,7 @@ import (
 	"github.com/google/go-github/v47/github"
 	"os"
 	"net/http"
+	"github.com/go-git/go-git/v5"
 )
 
 type gh struct {
