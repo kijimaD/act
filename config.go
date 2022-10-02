@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-var DefaultConfigFilePath = ".stats.yml"
+var DefaultConfigFilePath = ".act.yml"
 
 // memo: 各フィールドはpublicである必要がある
 type Config struct {

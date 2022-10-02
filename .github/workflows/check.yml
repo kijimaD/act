@@ -95,7 +95,7 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}
           target: release
           push: true
-          tags: ghcr.io/kijimad/stats:${{ steps.git-tag.outputs.git-tag }},ghcr.io/kijimad/stats:latest
+          tags: ghcr.io/kijimad/act:${{ steps.git-tag.outputs.git-tag }},ghcr.io/kijimad/act:latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
 
