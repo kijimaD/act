@@ -37,7 +37,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: run
-        run: go run .
+        run: GH_TOKEN=${{ secrets.WRITE_PACKAGE }} go run .
 
   test:
     needs: setup
