@@ -32,7 +32,7 @@ func (s *Scrape) Execute() *Scrape {
 			panic(err)
 		}
 		for _, r := range repos {
-			commitCount := commitCount(*r.Name, *r.DefaultBranch)
+			commitCount := s.commitCount(*r.Name, *r.DefaultBranch)
 			s.Repos = append(s.Repos, NewRepo(r, commitCount))
 		}
 		if resp.NextPage == 0 {
@@ -42,12 +42,12 @@ func (s *Scrape) Execute() *Scrape {
 	return s
 }
 
-func commitCount(reponame string, branch string) int {
+func (s *Scrape) commitCount(reponame string, branch string) int {
 	// GitHub REST APIでリポジトリの総コミット数を知る方法がなかったので、GraphQLを使っている
 	client := graphql.NewClient("https://api.github.com/graphql", gh.Login())
 
 	// 変数展開が必要なためクエリを文字列モードで実行する
-	query := fmt.Sprintf("{repository(owner:\"%s\", name:\"%s\") {object(expression:\"%s\") {... on Commit {history {totalCount}}}}}", "kijimaD", reponame, branch)
+	query := fmt.Sprintf("{repository(owner:\"%s\", name:\"%s\") {object(expression:\"%s\") {... on Commit {history {totalCount}}}}}", s.config.User, reponame, branch)
 
 	var res struct {
 		Repository struct {
