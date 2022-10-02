@@ -21,6 +21,10 @@ func newReport(in Scrape) *Report {
 func (r *Report) execute() {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader(r.headers())
+	table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
+	table.SetCenterSeparator("|")
+	table.SetAutoWrapText(false)
+	table.SetAutoFormatHeaders(false)
 
 	for _, repo := range r.in {
 		table.Append(r.content(repo))
@@ -30,9 +34,9 @@ func (r *Report) execute() {
 }
 
 func (r *Report) headers() []string {
-	return []string{"Name", "Description", "Language", "URL", "Forks", "Star", "Commit"}
+	return []string{"Name", "Description", "Language", "Forks", "Star", "Commit"}
 }
 
 func (r *Report) content(repo Repo) []string {
-	return []string{repo.Name, repo.Description, repo.Language, repo.HTMLURL, strconv.Itoa(repo.ForksCount), strconv.Itoa(repo.StargazersCount), strconv.Itoa(repo.CommitCount)}
+	return []string{repo.MdLink(), repo.Description, repo.Language, strconv.Itoa(repo.ForksCount), strconv.Itoa(repo.StargazersCount), strconv.Itoa(repo.CommitCount)}
 }

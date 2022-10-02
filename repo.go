@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/google/go-github/v47/github"
 )
 
@@ -41,4 +42,8 @@ func newRepo(res *github.Repository) Repo {
 		0, // *contributors[0].Total,
 	}
 	return result
+}
+
+func (r *Repo) MdLink() string {
+	return fmt.Sprintf("[%s](%s)", r.Name, r.HTMLURL)
 }
