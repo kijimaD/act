@@ -6,6 +6,6 @@ func main() {
 	config := newConfig()
 	config.load(DefaultConfigFilePath)
 
-	scrape := newScrape()
-	newReport(scrape).execute(config)
+	scrape := newScrape(config)
+	newReport(scrape, config).execute()
 }

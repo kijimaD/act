@@ -10,11 +10,14 @@ import (
 )
 
 type Scrape struct {
-	Repos []Repo
+	Repos  []Repo
+	config Config
 }
 
-func newScrape() Scrape {
+func newScrape(config Config) Scrape {
 	var scrape Scrape
+	scrape.config = config
+
 	client := login()
 	opt := &github.RepositoryListOptions{
 		ListOptions: github.ListOptions{PerPage: 100},
