@@ -26,29 +26,27 @@ func newScrape() Scrape {
 			panic(err)
 		}
 		for _, r := range repos {
-			// commitCount := commitCount(".emacs.d")
-			commitCount := 1
+			commitCount := commitCount(*r.Name, *r.DefaultBranch)
 			scrape.Repos = append(scrape.Repos, newRepo(r, commitCount))
 		}
 		if resp.NextPage == 0 {
 			break
 		}
 	}
-	fmt.Println(commitCount(".emacs.d"))
 	return scrape
 }
 
-func commitCount(reponame string) int {
+func commitCount(reponame string, branch string) int {
 	// GitHub REST APIでリポジトリの総コミット数を知る方法がなかったので、GraphQLを使っている
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: os.Getenv("GH_TOKEN")},
 	)
 	ctx := context.Background()
 	tc := oauth2.NewClient(ctx, ts)
-
 	client := graphql.NewClient("https://api.github.com/graphql", tc)
 
-	query := "{repository(owner:\"kijimaD\", name:\"dotfiles\") {object(expression:\"main\") {... on Commit {history {totalCount}}}}}"
+	// 変数展開が必要なためクエリを文字列モードで実行する
+	query := fmt.Sprintf("{repository(owner:\"%s\", name:\"%s\") {object(expression:\"%s\") {... on Commit {history {totalCount}}}}}", "kijimaD", reponame, branch)
 
 	var res struct {
 		Repository struct {
