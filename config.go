@@ -10,11 +10,13 @@ var DefaultConfigFilePath = ".act.yml"
 // memo: 各フィールドはpublicである必要がある
 type Config struct {
 	OutType string `yaml:"outType"`
+	OutPath string `yaml:"outPath"`
 }
 
 func newConfig() Config {
 	return Config{
 		OutType: "stdout",
+		OutPath: "./README.md",
 	}
 }
 

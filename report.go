@@ -23,14 +23,14 @@ func newReport(in Scrape, config Config) *Report {
 }
 
 func (r *Report) execute() {
-	// 出力分岐を別の関数にしたいが、fileが空白になる
+	// 出力分岐を別の関数にしたいが、出力されない(空白のファイルになる)
 	var output io.Writer
 
 	switch r.config.OutType {
 	case "stdout":
 		output = os.Stdout
 	case "file":
-		file, err := os.Create("README.md")
+		file, err := os.Create(r.config.OutPath)
 		if err != nil {
 			fmt.Println(err)
 		}
