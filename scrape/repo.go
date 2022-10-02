@@ -1,4 +1,4 @@
-package main
+package scrape
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ type Repo struct {
 	CommitCount     int
 }
 
-func newRepo(res *github.Repository, commitCount int) Repo {
+func NewRepo(res *github.Repository, commitCount int) Repo {
 	// ヌルポ対策
 	var desc string
 	var lang string

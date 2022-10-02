@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func login() *github.Client {
+func Login() *github.Client {
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: os.Getenv("GH_TOKEN")},
 	)

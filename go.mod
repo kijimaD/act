@@ -1,4 +1,4 @@
-module goph
+module act
 
 go 1.19
 

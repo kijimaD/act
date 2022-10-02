@@ -1,2 +1,4 @@
 outType: file
 outPath: ./README.md
+commit: true
+push: true
