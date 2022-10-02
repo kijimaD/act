@@ -26,17 +26,19 @@ func newScrape() Scrape {
 			panic(err)
 		}
 		for _, r := range repos {
-			scrape.Repos = append(scrape.Repos, newRepo(r))
+			// commitCount := commitCount(".emacs.d")
+			commitCount := 1
+			scrape.Repos = append(scrape.Repos, newRepo(r, commitCount))
 		}
 		if resp.NextPage == 0 {
 			break
 		}
 	}
-	commitCount(".emacs.d")
+	fmt.Println(commitCount(".emacs.d"))
 	return scrape
 }
 
-func commitCount(reponame string) string {
+func commitCount(reponame string) int {
 	// GitHub REST APIでリポジトリの総コミット数を知る方法がなかったので、GraphQLを使っている
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: os.Getenv("GH_TOKEN")},
@@ -46,7 +48,9 @@ func commitCount(reponame string) string {
 
 	client := graphql.NewClient("https://api.github.com/graphql", tc)
 
-	var query struct {
+	query := "{repository(owner:\"kijimaD\", name:\"dotfiles\") {object(expression:\"main\") {... on Commit {history {totalCount}}}}}"
+
+	var res struct {
 		Repository struct {
 			Object struct {
 				Commit struct {
@@ -58,23 +62,10 @@ func commitCount(reponame string) string {
 		} `graphql:"repository(owner: \"kijimaD\", name: \".emacs.d\")"`
 	}
 
-	// query {
-	// 	repository(owner:"kijimaD", name:".emacs.d") {
-	// 		object(expression:"master") {
-	// 			... on Commit {
-	// 				history {
-	// 					totalCount
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// }
-
-	err := client.Query(context.Background(), &query, nil)
+	err := client.Exec(context.Background(), query, &res, nil)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(query.Repository)
-
-	return "a"
+	count := res.Repository.Object.Commit.History.TotalCount
+	return count
 }

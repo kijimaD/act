@@ -16,7 +16,7 @@ type Repo struct {
 	CommitCount     int
 }
 
-func newRepo(res *github.Repository) Repo {
+func newRepo(res *github.Repository, commitCount int) Repo {
 	// ヌルポ対策
 	var desc string
 	var lang string
@@ -39,7 +39,7 @@ func newRepo(res *github.Repository) Repo {
 		*res.DefaultBranch,
 		*res.ForksCount,
 		*res.StargazersCount,
-		0, // *contributors[0].Total,
+		commitCount,
 	}
 	return result
 }
