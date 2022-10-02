@@ -42,7 +42,3 @@ func newRepo(res *github.Repository) Repo {
 	}
 	return result
 }
-
-func (r *Repo) headers() []string {
-	return []string{"Name", "Description", "Language", "URL", "Forks", "Star", "Commit"}
-}

@@ -4,5 +4,5 @@ import ()
 
 func main() {
 	scrape := newScrape()
-	newReport(scrape)
+	newReport(scrape).execute()
 }
