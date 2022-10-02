@@ -7,13 +7,14 @@ import (
 
 var DefaultConfigFilePath = ".stats.yml"
 
+// memo: 各フィールドはpublicである必要がある
 type Config struct {
-	output string `yaml:"output"`
+	Output string `yaml:"output"`
 }
 
 func newConfig() Config {
 	return Config{
-		output: "stdout",
+		Output: "stdout",
 	}
 }
 

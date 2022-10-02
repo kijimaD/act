@@ -22,7 +22,7 @@ func newReport(in Scrape) *Report {
 func (r *Report) execute(c Config) {
 	output := os.Stdout
 
-	switch c.output {
+	switch c.Output {
 	case "output":
 		output = os.Stdout
 	case "file":
