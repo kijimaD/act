@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/google/go-github/v47/github"
 )
 
 type Scrape struct {
@@ -12,9 +13,21 @@ type Scrape struct {
 func newScrape() Scrape {
 	var scrape Scrape
 	client := login()
-	repos, _, _ := client.Repositories.List(context.Background(), "kijimaD", nil)
-	for _, r := range repos {
-		scrape.Repos = append(scrape.Repos, newRepo(r))
+	opt := &github.RepositoryListOptions{
+		ListOptions: github.ListOptions{PerPage: 100},
+	}
+
+	for {
+		repos, resp, err := client.Repositories.List(context.Background(), "kijimaD", opt)
+		if err != nil {
+			panic(err)
+		}
+		for _, r := range repos {
+			scrape.Repos = append(scrape.Repos, newRepo(r))
+		}
+		if resp.NextPage == 0 {
+			break
+		}
 	}
 	return scrape
 }
