@@ -6,7 +6,7 @@ import (
 	"github.com/google/go-github/v47/github"
 	"github.com/hasura/go-graphql-client"
 	"act/config"
-	"act/utils"
+	"act/gh"
 )
 
 type Scrape struct {
@@ -18,7 +18,7 @@ func NewScrape(config config.Config) Scrape {
 	var scrape Scrape
 	scrape.config = config
 
-	client := github.NewClient(utils.Login())
+	client := gh.New().Client
 	opt := &github.RepositoryListOptions{
 		ListOptions: github.ListOptions{PerPage: 100},
 	}
@@ -41,7 +41,7 @@ func NewScrape(config config.Config) Scrape {
 
 func commitCount(reponame string, branch string) int {
 	// GitHub REST APIでリポジトリの総コミット数を知る方法がなかったので、GraphQLを使っている
-	client := graphql.NewClient("https://api.github.com/graphql", utils.Login())
+	client := graphql.NewClient("https://api.github.com/graphql", gh.Login())
 
 	// 変数展開が必要なためクエリを文字列モードで実行する
 	query := fmt.Sprintf("{repository(owner:\"%s\", name:\"%s\") {object(expression:\"%s\") {... on Commit {history {totalCount}}}}}", "kijimaD", reponame, branch)
