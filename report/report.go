@@ -68,9 +68,16 @@ func (r *Report) repoTable(output io.Writer) {
 }
 
 func (r *Report) repoHeaders() []string {
-	return []string{"Name", "Description", "Language", "Forks", "Star", "Commit"}
+	return []string{"Name", "Description", "Language", "Commit", "Star", "Fork"}
 }
 
 func (r *Report) repoContent(repo scrape.Repo) []string {
-	return []string{repo.MdLink(), repo.Description, repo.Language, strconv.Itoa(repo.ForksCount), strconv.Itoa(repo.StargazersCount), strconv.Itoa(repo.CommitCount)}
+	return []string{
+		repo.MdLink(),
+		repo.Description,
+		repo.Language,
+		strconv.Itoa(repo.CommitCount),
+		strconv.Itoa(repo.StargazersCount),
+		strconv.Itoa(repo.ForksCount),
+	}
 }
