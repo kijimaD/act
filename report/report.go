@@ -13,12 +13,25 @@ import (
 type Report struct {
 	in     []scrape.Repo
 	config config.Config
+	langMap map[string]langRecord
 }
 
 func NewReport(in scrape.Scrape, config config.Config) *Report {
+	langMap := make(map[string]langRecord)
+	for _, repo := range in.Repos {
+		newRepo := langMap[repo.Language].repoC + 1
+		newCommit := langMap[repo.Language].commitC + repo.CommitCount
+
+		langMap[repo.Language] = langRecord{
+			repoC: newRepo,
+			commitC: newCommit,
+		}
+	}
+
 	return &Report{
 		in:     in.Repos,
 		config: config,
+		langMap: langMap,
 	}
 }
 
@@ -81,18 +94,7 @@ func (r *Report) langTable(output io.Writer) {
 	table.SetAutoWrapText(false)
 	table.SetAutoFormatHeaders(false)
 
-	hash := make(map[string]langRecord)
-	for _, repo := range r.in {
-		newRepo := hash[repo.Language].repoC + 1
-		newCommit := hash[repo.Language].commitC + repo.CommitCount
-
-		hash[repo.Language] = langRecord{
-			repoC: newRepo,
-			commitC: newCommit,
-		}
-	}
-
-	for k, v := range hash {
+	for k, v := range r.langMap {
 		table.Append(r.langContent(k, v))
 	}
 
