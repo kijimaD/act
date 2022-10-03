@@ -101,8 +101,8 @@ func (report *Report) Commit() {
 		// commit
 		commit, err := w.Commit("commit by act", &git.CommitOptions{
 			Author: &object.Signature{
-				Name:  report.config.OutPath,
-				Email: "norimaking777@gmail.com",
+				Name:  report.config.User.Name,
+				Email: report.config.User.Email,
 				When:  time.Now(),
 			},
 		})

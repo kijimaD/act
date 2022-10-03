@@ -12,10 +12,10 @@ type gh struct {
 	Client *github.Client
 }
 
-func New() gh {
+func New() *gh {
 	client := github.NewClient(Login())
 
-	return gh{
+	return &gh{
 		Client: client,
 	}
 }
@@ -27,4 +27,9 @@ func Login() *http.Client {
 	ctx := context.Background()
 	tc := oauth2.NewClient(ctx, ts)
 	return tc
+}
+
+func (gh *gh) User() *github.User {
+	user, _, _ := gh.Client.Users.Get(context.Background(), "")
+	return user
 }

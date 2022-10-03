@@ -27,7 +27,7 @@ func (s *Scrape) Execute() *Scrape {
 	}
 
 	for {
-		repos, resp, err := client.Repositories.List(context.Background(), s.config.User, opt)
+		repos, resp, err := client.Repositories.List(context.Background(), s.config.User.Id, opt)
 		if err != nil {
 			panic(err)
 		}
@@ -47,7 +47,7 @@ func (s *Scrape) commitCount(reponame string, branch string) int {
 	client := graphql.NewClient("https://api.github.com/graphql", gh.Login())
 
 	// 変数展開が必要なためクエリを文字列モードで実行する
-	query := fmt.Sprintf("{repository(owner:\"%s\", name:\"%s\") {object(expression:\"%s\") {... on Commit {history {totalCount}}}}}", s.config.User, reponame, branch)
+	query := fmt.Sprintf("{repository(owner:\"%s\", name:\"%s\") {object(expression:\"%s\") {... on Commit {history {totalCount}}}}}", s.config.User.Id, reponame, branch)
 
 	var res struct {
 		Repository struct {
