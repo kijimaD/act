@@ -11,5 +11,5 @@ func main() {
 	config.Load()
 
 	scrape := scrape.NewScrape(config).Execute()
-	report.NewReport(*scrape, config).Execute().Commit()
+	report.NewReport(*scrape, config).Execute().Commit().Push()
 }

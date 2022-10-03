@@ -1,6 +1,7 @@
 package report
 
 import (
+	"context"
 	"fmt"
 	"github.com/olekukonko/tablewriter"
 	"io"
@@ -10,6 +11,7 @@ import (
 	"act/scrape"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/object"
+	ghttp "github.com/go-git/go-git/v5/plumbing/transport/http"
 	"time"
 	"path/filepath"
 )
@@ -72,7 +74,7 @@ func (r *Report) content(repo scrape.Repo) []string {
 
 // コミット
 // 作業に影響しないようにインメモリGitで操作するのがベストだが、ファイル操作の方法がわからなかったのでカレントディレクトリで作業する
-func (report *Report) Commit() {
+func (report *Report) Commit() *Report {
 	if report.config.IsCommit {
 		directory := "./"
 
@@ -109,5 +111,31 @@ func (report *Report) Commit() {
 		obj, err := r.CommitObject(commit)
 
 		fmt.Println(obj)
+	}
+	return report
+}
+
+func (report *Report) Push() {
+	if report.config.IsPush {
+		path := "./"
+
+		r, err := git.PlainOpen(path)
+		if err != nil {
+			panic(err)
+		}
+
+		err = r.PushContext(
+			context.Background(),
+			&git.PushOptions{
+				RemoteName: "https",
+				Auth: &ghttp.BasicAuth{
+					Username: "kijimaD",
+					Password: os.Getenv("GH_TOKEN"),
+				},
+			})
+		if err != nil && err != git.NoErrAlreadyUpToDate {
+			panic(err)
+		}
+		fmt.Println("Pushed")
 	}
 }
