@@ -35,6 +35,8 @@ func (s *Scrape) Execute() *Scrape {
 			commitCount := s.commitCount(*r.Name, *r.DefaultBranch)
 			s.Repos = append(s.Repos, NewRepo(r, commitCount))
 		}
+
+		// pagination
 		if resp.NextPage == 0 {
 			break
 		}

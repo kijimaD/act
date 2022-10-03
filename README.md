@@ -17,6 +17,7 @@ $ go install github.com/kijimaD/act@main
 set `.act.yml`
 
 ```yml
+userId: kijimaD
 outType: file
 outPath: ./README.md
 commit: true
