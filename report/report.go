@@ -66,15 +66,21 @@ func (r *Report) Execute() *Report {
 	}
 
 	r.header(output)
-	r.repoTable(output)
 	r.langTable(output)
+	r.repoTable(output)
 
 	return r
 }
 
+func (r *Report) blankLine(output io.Writer) {
+	output.Write([]byte("\n"))
+}
+
 func (r *Report) header(output io.Writer) {
 	str := fmt.Sprintf("# central\n")
-	str += fmt.Sprintf("%v public repos\n\n", r.repoCount)
+	str += fmt.Sprintf("%v public repos\n", r.repoCount)
+	str += fmt.Sprintf("%v commits\n", r.commitCount)
+	str += fmt.Sprintf("\n")
 	output.Write([]byte(str))
 }
 
@@ -91,6 +97,7 @@ func (r *Report) repoTable(output io.Writer) {
 	}
 
 	table.Render()
+	r.blankLine(output)
 }
 
 type langRecord struct {
@@ -111,6 +118,7 @@ func (r *Report) langTable(output io.Writer) {
 	}
 
 	table.Render()
+	r.blankLine(output)
 }
 
 func (r *Report) langHeaders() []string {
