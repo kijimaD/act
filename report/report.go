@@ -42,6 +42,7 @@ func (r *Report) Execute() *Report {
 
 	r.header(output)
 	r.repoTable(output)
+	r.langTable(output)
 
 	return r
 }
@@ -67,8 +68,51 @@ func (r *Report) repoTable(output io.Writer) {
 	table.Render()
 }
 
+type langRecord struct {
+	repoC int
+	commitC int
+}
+
+func (r *Report) langTable(output io.Writer) {
+	table := tablewriter.NewWriter(output)
+	table.SetHeader(r.langHeaders())
+	table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
+	table.SetCenterSeparator("|")
+	table.SetAutoWrapText(false)
+	table.SetAutoFormatHeaders(false)
+
+	hash := make(map[string]langRecord)
+	for _, repo := range r.in {
+		newRepo := hash[repo.Language].repoC + 1
+		newCommit := hash[repo.Language].commitC + repo.CommitCount
+
+		hash[repo.Language] = langRecord{
+			repoC: newRepo,
+			commitC: newCommit,
+		}
+	}
+
+	for k, v := range hash {
+		table.Append(r.langContent(k, v))
+	}
+
+	table.Render()
+}
+
+func (r *Report) langHeaders() []string {
+	return []string{"Lang", "Repo", "Commit"}
+}
+
+func (r *Report) langContent(n string, l langRecord) []string {
+	return []string{
+		n,
+		strconv.Itoa(l.repoC),
+		strconv.Itoa(l.commitC),
+	}
+}
+
 func (r *Report) repoHeaders() []string {
-	return []string{"Name", "Description", "Language", "Commit", "Star", "Fork"}
+	return []string{"Name", "Desc", "Lang", "Commit", "Star", "Fork"}
 }
 
 func (r *Report) repoContent(repo scrape.Repo) []string {
