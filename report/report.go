@@ -1,7 +1,6 @@
 package report
 
 import (
-	"fmt"
 	"github.com/olekukonko/tablewriter"
 	"io"
 	"os"
@@ -34,7 +33,7 @@ func (r *Report) Execute() *Report {
 	case "file":
 		file, err := os.Create(r.config.OutPath)
 		if err != nil {
-			fmt.Println(err)
+			panic(err)
 		}
 		defer file.Close()
 		output = file
@@ -42,26 +41,30 @@ func (r *Report) Execute() *Report {
 		panic("output type error. stdout | file")
 	}
 
+	r.repoTable(output)
+
+	return r
+}
+
+func (r *Report) repoTable(output io.Writer) {
 	table := tablewriter.NewWriter(output)
-	// table := tablewriter.NewWriter(r.selectOutput())
-	table.SetHeader(r.headers())
+	table.SetHeader(r.repoHeaders())
 	table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
 	table.SetCenterSeparator("|")
 	table.SetAutoWrapText(false)
 	table.SetAutoFormatHeaders(false)
 
 	for _, repo := range r.in {
-		table.Append(r.content(repo))
+		table.Append(r.repoContent(repo))
 	}
 
 	table.Render()
-	return r
 }
 
-func (r *Report) headers() []string {
+func (r *Report) repoHeaders() []string {
 	return []string{"Name", "Description", "Language", "Forks", "Star", "Commit"}
 }
 
-func (r *Report) content(repo scrape.Repo) []string {
+func (r *Report) repoContent(repo scrape.Repo) []string {
 	return []string{repo.MdLink(), repo.Description, repo.Language, strconv.Itoa(repo.ForksCount), strconv.Itoa(repo.StargazersCount), strconv.Itoa(repo.CommitCount)}
 }
