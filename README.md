@@ -18,7 +18,9 @@ set `.act.yml`
 
 ```yml
 outType: file
-outFile: ./README.md
+outPath: ./README.md
+commit: true
+push: false
 ```
 
 and prepare GitHub API token, run
