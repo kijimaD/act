@@ -30,6 +30,10 @@ func Login() *http.Client {
 }
 
 func (gh *gh) User() *github.User {
-	user, _, _ := gh.Client.Users.Get(context.Background(), "")
+	// Passing the empty string will fetch the authenticated user.
+	user, _, err := gh.Client.Users.Get(context.Background(), "")
+	if err != nil {
+		panic(err)
+	}
 	return user
 }
