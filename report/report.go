@@ -101,7 +101,7 @@ func (report *Report) Commit() *Report {
 		fmt.Println(status)
 
 		// commit
-		commit, err := w.Commit("commit by act", &git.CommitOptions{
+		commit, err := w.Commit("commit by act [ci skip]", &git.CommitOptions{
 			Author: &object.Signature{
 				Name:  report.config.User.Name,
 				Email: report.config.User.Email,
