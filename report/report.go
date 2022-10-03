@@ -77,9 +77,9 @@ func (r *Report) blankLine(output io.Writer) {
 }
 
 func (r *Report) header(output io.Writer) {
-	str := fmt.Sprintf("# central\n")
-	str += fmt.Sprintf("%v public repos\n", r.repoCount)
-	str += fmt.Sprintf("%v commits\n", r.commitCount)
+	str := fmt.Sprintf("# central\n\n")
+	str += fmt.Sprintf("- %v public repos\n", r.repoCount)
+	str += fmt.Sprintf("- %v commits\n", r.commitCount)
 	str += fmt.Sprintf("\n")
 	output.Write([]byte(str))
 }
