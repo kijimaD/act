@@ -1,4 +1,5 @@
 outType: file
 outPath: ./README.md
 commit: true
+userId: kijimaD
 push: false

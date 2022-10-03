@@ -4,6 +4,7 @@ import (
 	"act/config"
 	"act/report"
 	"act/scrape"
+	"act/gh"
 )
 
 func main() {
@@ -11,5 +12,6 @@ func main() {
 	config.Load()
 
 	scrape := scrape.NewScrape(config).Execute()
-	report.NewReport(*scrape, config).Execute().Commit().Push()
+	report.NewReport(*scrape, config).Execute()
+	gh.New(config).Commit().Push()
 }
