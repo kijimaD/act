@@ -5,10 +5,8 @@ import (
 	"fmt"
 	"github.com/google/go-github/v47/github"
 	"github.com/hasura/go-graphql-client"
-	"golang.org/x/oauth2"
-	"os"
 	"act/config"
-	"act/utils"
+	"act/gh"
 )
 
 type Scrape struct {
@@ -16,42 +14,40 @@ type Scrape struct {
 	config config.Config
 }
 
-func NewScrape(config config.Config) Scrape {
+func NewScrape(config config.Config) *Scrape {
 	var scrape Scrape
 	scrape.config = config
+	return &scrape
+}
 
-	client := utils.Login()
+func (s *Scrape) Execute() *Scrape {
+	client := gh.New().Client
 	opt := &github.RepositoryListOptions{
 		ListOptions: github.ListOptions{PerPage: 100},
 	}
 
 	for {
-		repos, resp, err := client.Repositories.List(context.Background(), "kijimaD", opt)
+		repos, resp, err := client.Repositories.List(context.Background(), s.config.User.Id, opt)
 		if err != nil {
 			panic(err)
 		}
 		for _, r := range repos {
-			commitCount := commitCount(*r.Name, *r.DefaultBranch)
-			scrape.Repos = append(scrape.Repos, NewRepo(r, commitCount))
+			commitCount := s.commitCount(*r.Name, *r.DefaultBranch)
+			s.Repos = append(s.Repos, NewRepo(r, commitCount))
 		}
 		if resp.NextPage == 0 {
 			break
 		}
 	}
-	return scrape
+	return s
 }
 
-func commitCount(reponame string, branch string) int {
+func (s *Scrape) commitCount(reponame string, branch string) int {
 	// GitHub REST APIでリポジトリの総コミット数を知る方法がなかったので、GraphQLを使っている
-	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: os.Getenv("GH_TOKEN")},
-	)
-	ctx := context.Background()
-	tc := oauth2.NewClient(ctx, ts)
-	client := graphql.NewClient("https://api.github.com/graphql", tc)
+	client := graphql.NewClient("https://api.github.com/graphql", gh.Login())
 
 	// 変数展開が必要なためクエリを文字列モードで実行する
-	query := fmt.Sprintf("{repository(owner:\"%s\", name:\"%s\") {object(expression:\"%s\") {... on Commit {history {totalCount}}}}}", "kijimaD", reponame, branch)
+	query := fmt.Sprintf("{repository(owner:\"%s\", name:\"%s\") {object(expression:\"%s\") {... on Commit {history {totalCount}}}}}", s.config.User.Id, reponame, branch)
 
 	var res struct {
 		Repository struct {
@@ -61,8 +57,8 @@ func commitCount(reponame string, branch string) int {
 						TotalCount int
 					}
 				} `graphql:"... on Commit"`
-			} `graphql:"object(expression:\"master\")"`
-		} `graphql:"repository(owner: \"kijimaD\", name: \".emacs.d\")"`
+			}
+		}
 	}
 
 	err := client.Exec(context.Background(), query, &res, nil)

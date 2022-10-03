@@ -10,6 +10,6 @@ func main() {
 	config := config.NewConfig()
 	config.Load()
 
-	scrape := scrape.NewScrape(config)
-	report.NewReport(scrape, config).Execute()
+	scrape := scrape.NewScrape(config).Execute()
+	report.NewReport(*scrape, config).Execute().Commit().Push()
 }

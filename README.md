@@ -24,7 +24,7 @@ outFile: ./README.md
 and prepare GitHub API token, run
 
 ```shell
-$ GH_TOKEN=your_token... act
+$ GH_TOKEN=<your_token> act
 ```
 
 # Docker run
