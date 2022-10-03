@@ -14,6 +14,8 @@ type Report struct {
 	in     []scrape.Repo
 	config config.Config
 	langMap map[string]langRecord
+	commitCount int
+	repoCount int
 }
 
 func NewReport(in scrape.Scrape, config config.Config) *Report {
@@ -28,10 +30,17 @@ func NewReport(in scrape.Scrape, config config.Config) *Report {
 		}
 	}
 
+	commitCount := 0
+	for _, repo := range in.Repos {
+		commitCount += repo.CommitCount
+	}
+
 	return &Report{
 		in:     in.Repos,
 		config: config,
 		langMap: langMap,
+		commitCount: commitCount,
+		repoCount: len(in.Repos),
 	}
 }
 
@@ -62,7 +71,7 @@ func (r *Report) Execute() *Report {
 
 func (r *Report) header(output io.Writer) {
 	str := fmt.Sprintf("# central\n")
-	str += fmt.Sprintf("%v public repos\n\n", len(r.in))
+	str += fmt.Sprintf("%v public repos\n\n", r.repoCount)
 	output.Write([]byte(str))
 }
 
