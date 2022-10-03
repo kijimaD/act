@@ -31,7 +31,7 @@ $ GH_TOKEN=<your_token> act
 
 ```shell
 docker run --rm \
-           -it \
+           -e GH_TOKEN=<API Token> \
            -v "${PWD}":/workdir \
            ghcr.io/kijimad/act:latest
 ```
