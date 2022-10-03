@@ -1,6 +1,7 @@
 package report
 
 import (
+	"fmt"
 	"github.com/olekukonko/tablewriter"
 	"io"
 	"os"
@@ -39,9 +40,16 @@ func (r *Report) Execute() *Report {
 		panic("output type error. stdout | file")
 	}
 
+	r.header(output)
 	r.repoTable(output)
 
 	return r
+}
+
+func (r *Report) header(output io.Writer) {
+	str := fmt.Sprintf("# central\n")
+	str += fmt.Sprintf("%v public repos\n\n", len(r.in))
+	output.Write([]byte(str))
 }
 
 func (r *Report) repoTable(output io.Writer) {
