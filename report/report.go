@@ -117,8 +117,8 @@ func (r *Report) langHeaders() []string {
 func (r *Report) langContent(n string, l langRecord) []string {
 	return []string{
 		n,
-		strconv.Itoa(l.repoC),
-		strconv.Itoa(l.commitC),
+		fmt.Sprintf("%v (%v%%)", l.repoC, int(float64(l.repoC) / float64(r.repoCount) * 100)),
+		fmt.Sprintf("%v (%v%%)", l.commitC, int(float64(l.commitC) / float64(r.commitCount) * 100)),
 	}
 }
 
