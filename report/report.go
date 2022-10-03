@@ -11,14 +11,12 @@ import (
 
 type Report struct {
 	in     []scrape.Repo
-	out    string
 	config config.Config
 }
 
 func NewReport(in scrape.Scrape, config config.Config) *Report {
 	return &Report{
 		in:     in.Repos,
-		out:    "",
 		config: config,
 	}
 }
