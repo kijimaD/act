@@ -115,6 +115,7 @@ func (report *Report) Commit() *Report {
 	return report
 }
 
+// support only HTTPS push
 func (report *Report) Push() {
 	if report.config.IsPush {
 		path := "./"
@@ -127,9 +128,9 @@ func (report *Report) Push() {
 		err = r.PushContext(
 			context.Background(),
 			&git.PushOptions{
-				RemoteName: "https",
+				Progress: os.Stdout,
 				Auth: &ghttp.BasicAuth{
-					Username: "kijimaD",
+					Username: report.config.User.Id,
 					Password: os.Getenv("GH_TOKEN"),
 				},
 			})
