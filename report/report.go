@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"act/config"
 	"act/scrape"
+	"sort"
 )
 
 type Report struct {
@@ -19,6 +20,8 @@ type Report struct {
 }
 
 func NewReport(in scrape.Scrape, config config.Config) *Report {
+	sort.Slice(in.Repos, func(i, j int) bool { return in.Repos[i].Language < in.Repos[j].Language })
+
 	langMap := make(map[string]langRecord)
 	for _, repo := range in.Repos {
 		newRepo := langMap[repo.Language].repoC + 1
