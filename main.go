@@ -2,9 +2,9 @@ package main
 
 import (
 	"act/config"
+	"act/gh"
 	"act/report"
 	"act/scrape"
-	"act/gh"
 )
 
 func main() {

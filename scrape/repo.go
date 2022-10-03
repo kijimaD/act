@@ -26,7 +26,7 @@ func NewRepo(res *github.Repository, commitCount int) Repo {
 		desc = *res.Description
 	}
 	if res.Language == nil {
-		lang = ""
+		lang = "None"
 	} else {
 		lang = *res.Language
 	}
