@@ -3,6 +3,9 @@ name: ⚗️Check
 on:
   push:
 
+env:
+  GH_TOKEN: ${{ secrets.WRITE_PACKAGE }}
+
 jobs:
   # 共通処理
   setup:
@@ -37,7 +40,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: run
-        run: GH_TOKEN=${{ secrets.WRITE_PACKAGE }} go run .
+        run: go run .
 
   test:
     needs: setup
