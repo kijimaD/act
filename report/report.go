@@ -111,19 +111,34 @@ func (r *Report) langTable(output io.Writer) {
 }
 
 func (r *Report) langHeaders() []string {
-	return []string{"Lang", "Repo", "Commit"}
+	return []string{
+		"Lang",
+		"Repo",
+		"%",
+		"Commit",
+		"%",
+	}
 }
 
-func (r *Report) langContent(n string, l langRecord) []string {
+func (r *Report) langContent(name string, l langRecord) []string {
 	return []string{
-		n,
-		fmt.Sprintf("%v (%v%%)", l.repoC, int(float64(l.repoC) / float64(r.repoCount) * 100)),
-		fmt.Sprintf("%v (%v%%)", l.commitC, int(float64(l.commitC) / float64(r.commitCount) * 100)),
+		name,
+		fmt.Sprintf("%v", l.repoC),
+		fmt.Sprintf("%v%%", int(float64(l.repoC) / float64(r.repoCount) * 100)),
+		fmt.Sprintf("%v", l.commitC),
+		fmt.Sprintf("%v%%", int(float64(l.commitC) / float64(r.commitCount) * 100)),
 	}
 }
 
 func (r *Report) repoHeaders() []string {
-	return []string{"Name", "Desc", "Lang", "Commit", "Star", "Fork"}
+	return []string{
+		"Name",
+		"Desc",
+		"Lang",
+		"Commit",
+		"Star",
+		"Fork",
+	}
 }
 
 func (r *Report) repoContent(repo scrape.Repo) []string {
