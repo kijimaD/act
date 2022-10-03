@@ -30,8 +30,8 @@ $ GH_TOKEN=<your_token> act
 # Docker run
 
 ```shell
-docker run --rm
-           -it
+docker run --rm \
+           -it \
            -v "${PWD}":/workdir \
            ghcr.io/kijimad/act:latest
 ```
