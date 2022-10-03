@@ -73,39 +73,41 @@ func (r *Report) content(repo scrape.Repo) []string {
 // コミット
 // 作業に影響しないようにインメモリGitで操作するのがベストだが、ファイル操作の方法がわからなかったのでカレントディレクトリで作業する
 func (report *Report) Commit() {
-	directory := "./"
+	if report.config.IsCommit {
+		directory := "./"
 
-	// Opens an already existing repository.
-	r, err := git.PlainOpen(directory)
-	if err != nil {
-		panic(err)
+		// Opens an already existing repository.
+		r, err := git.PlainOpen(directory)
+		if err != nil {
+			panic(err)
+		}
+		w, err := r.Worktree()
+		if err != nil {
+			panic(err)
+		}
+
+		// Adds the new file to the staging area.
+		_, fname := filepath.Split(report.config.OutPath)
+		_, err = w.Add(fname)
+		fmt.Println(report.config.OutPath)
+		if err != nil {
+			panic(err)
+		}
+
+		// We can verify the current status of the worktree using the method Status.
+		status, _ := w.Status()
+		fmt.Println(status)
+
+		// commit
+		commit, err := w.Commit("commit by act", &git.CommitOptions{
+			Author: &object.Signature{
+				Name:  report.config.OutPath,
+				Email: "norimaking777@gmail.com",
+				When:  time.Now(),
+			},
+		})
+		obj, err := r.CommitObject(commit)
+
+		fmt.Println(obj)
 	}
-	w, err := r.Worktree()
-	if err != nil {
-		panic(err)
-	}
-
-	// Adds the new file to the staging area.
-	_, fname := filepath.Split(report.config.OutPath)
-	_, err = w.Add(fname)
-	fmt.Println(report.config.OutPath)
-	if err != nil {
-		panic(err)
-	}
-
-	// We can verify the current status of the worktree using the method Status.
-	status, _ := w.Status()
-	fmt.Println(status)
-
-	// commit
-	commit, err := w.Commit("commit by act", &git.CommitOptions{
-		Author: &object.Signature{
-			Name:  "KijimaD",
-			Email: "norimaking777@gmail.com",
-			When:  time.Now(),
-		},
-	})
-	obj, err := r.CommitObject(commit)
-
-	fmt.Println(obj)
 }
