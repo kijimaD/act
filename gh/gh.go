@@ -15,6 +15,9 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/object"
 )
 
+const botName = "github-actions[bot]"
+const botEmail = "github-actions[bot]@users.noreply.github.com"
+
 type gh struct {
 	Client *github.Client
 	Config config.Config
@@ -78,8 +81,8 @@ func (gh *gh) Commit() *gh {
 		// commit
 		commit, err := w.Commit("commit by act [ci skip]", &git.CommitOptions{
 			Author: &object.Signature{
-				Name:  "github-actions[bot]",
-				Email: "github-actions[bot]@users.noreply.github.com",
+				Name:  botName,
+				Email: botEmail,
 				When:  time.Now(),
 			},
 		})
