@@ -9,6 +9,7 @@ import (
 	"act/config"
 	"act/scrape"
 	"sort"
+	"strings"
 )
 
 type Report struct {
@@ -133,12 +134,17 @@ func (r *Report) langHeaders() []string {
 
 func (r *Report) langContent(name string, l langRecord) []string {
 	return []string{
-		name,
+		fmt.Sprintf("%v %v", r.dotImage(name), name),
 		fmt.Sprintf("%v", l.repoC),
 		fmt.Sprintf("%v%%", int(float64(l.repoC) / float64(r.repoCount) * 100)),
 		fmt.Sprintf("%v", l.commitC),
 		fmt.Sprintf("%v%%", int(float64(l.commitC) / float64(r.commitCount) * 100)),
 	}
+}
+
+func (r *Report) dotImage(name string) string {
+	newName := strings.Replace(name, " ", "-", -1)
+	return fmt.Sprintf("![%v](https://raw.githubusercontent.com/kijimaD/maru/main/images/dot/%v.svg)", name, newName)
 }
 
 func (r *Report) repoHeaders() []string {
@@ -156,7 +162,7 @@ func (r *Report) repoContent(repo scrape.Repo) []string {
 	return []string{
 		repo.MdLink(),
 		repo.Description,
-		repo.Language,
+		fmt.Sprintf("%v %v", r.dotImage(repo.Language), repo.Language),
 		strconv.Itoa(repo.CommitCount),
 		strconv.Itoa(repo.StargazersCount),
 		strconv.Itoa(repo.ForksCount),
