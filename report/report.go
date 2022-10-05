@@ -114,7 +114,15 @@ func (r *Report) langTable(output io.Writer) {
 	table.SetAutoWrapText(false)
 	table.SetAutoFormatHeaders(false)
 
-	for k, v := range r.langMap {
+	// Memo: for fixing order
+	var keys []string
+	for k, _ := range r.langMap {
+		keys = append(keys, k)
+	}
+	sort.Slice(keys, func(i int , j int) bool { return keys[i] < keys[j] })
+
+	for _, k := range keys {
+		v := r.langMap[k]
 		table.Append(r.langContent(k, v))
 	}
 
