@@ -6,6 +6,8 @@
 
 act is curating your github activity tool.
 
+working example: [kijimaD/central](https://github.com/kijimaD/central)
+
 # Install
 
 ```sh
