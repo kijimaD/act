@@ -1,4 +1,4 @@
-module act
+module github.com/kijimaD/act
 
 go 1.19
 
