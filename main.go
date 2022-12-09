@@ -1,10 +1,10 @@
 package main
 
 import (
-	"act/config"
-	"act/gh"
-	"act/report"
-	"act/scrape"
+	"github.com/kijimaD/act/config"
+	"github.com/kijimaD/act/gh"
+	"github.com/kijimaD/act/report"
+	"github.com/kijimaD/act/scrape"
 )
 
 func main() {

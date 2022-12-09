@@ -1,18 +1,19 @@
 package gh
 
 import (
-	ghttp "github.com/go-git/go-git/v5/plumbing/transport/http"
-	"time"
 	"context"
-	"golang.org/x/oauth2"
-	"github.com/google/go-github/v47/github"
-	"os"
-	"net/http"
-	"act/config"
-	"github.com/go-git/go-git/v5"
-	"path/filepath"
 	"fmt"
+	"net/http"
+	"os"
+	"path/filepath"
+	"time"
+
+	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/object"
+	ghttp "github.com/go-git/go-git/v5/plumbing/transport/http"
+	"github.com/google/go-github/v47/github"
+	"github.com/kijimaD/act/config"
+	"golang.org/x/oauth2"
 )
 
 const botName = "github-actions[bot]"

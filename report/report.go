@@ -2,22 +2,23 @@ package report
 
 import (
 	"fmt"
-	"github.com/olekukonko/tablewriter"
 	"io"
 	"os"
-	"strconv"
-	"act/config"
-	"act/scrape"
 	"sort"
+	"strconv"
 	"strings"
+
+	"github.com/kijimaD/act/config"
+	"github.com/kijimaD/act/scrape"
+	"github.com/olekukonko/tablewriter"
 )
 
 type Report struct {
-	in     []scrape.Repo
-	config config.Config
-	langMap map[string]langRecord
+	in          []scrape.Repo
+	config      config.Config
+	langMap     map[string]langRecord
 	commitCount int
-	repoCount int
+	repoCount   int
 }
 
 func NewReport(in scrape.Scrape, config config.Config) *Report {
@@ -29,7 +30,7 @@ func NewReport(in scrape.Scrape, config config.Config) *Report {
 		newCommit := langMap[repo.Language].commitC + repo.CommitCount
 
 		langMap[repo.Language] = langRecord{
-			repoC: newRepo,
+			repoC:   newRepo,
 			commitC: newCommit,
 		}
 	}
@@ -40,11 +41,11 @@ func NewReport(in scrape.Scrape, config config.Config) *Report {
 	}
 
 	return &Report{
-		in:     in.Repos,
-		config: config,
-		langMap: langMap,
+		in:          in.Repos,
+		config:      config,
+		langMap:     langMap,
 		commitCount: commitCount,
-		repoCount: len(in.Repos),
+		repoCount:   len(in.Repos),
 	}
 }
 
@@ -102,7 +103,7 @@ func (r *Report) repoTable(output io.Writer) {
 }
 
 type langRecord struct {
-	repoC int
+	repoC   int
 	commitC int
 }
 
@@ -119,7 +120,7 @@ func (r *Report) langTable(output io.Writer) {
 	for k, _ := range r.langMap {
 		keys = append(keys, k)
 	}
-	sort.Slice(keys, func(i int , j int) bool { return keys[i] < keys[j] })
+	sort.Slice(keys, func(i int, j int) bool { return keys[i] < keys[j] })
 
 	for _, k := range keys {
 		v := r.langMap[k]
@@ -144,9 +145,9 @@ func (r *Report) langContent(name string, l langRecord) []string {
 	return []string{
 		fmt.Sprintf("%v %v", r.dotImage(name), name),
 		fmt.Sprintf("%v", l.repoC),
-		fmt.Sprintf("%v%%", int(float64(l.repoC) / float64(r.repoCount) * 100)),
+		fmt.Sprintf("%v%%", int(float64(l.repoC)/float64(r.repoCount)*100)),
 		fmt.Sprintf("%v", l.commitC),
-		fmt.Sprintf("%v%%", int(float64(l.commitC) / float64(r.commitCount) * 100)),
+		fmt.Sprintf("%v%%", int(float64(l.commitC)/float64(r.commitCount)*100)),
 	}
 }
 

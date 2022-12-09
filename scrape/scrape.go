@@ -3,10 +3,11 @@ package scrape
 import (
 	"context"
 	"fmt"
+
 	"github.com/google/go-github/v47/github"
 	"github.com/hasura/go-graphql-client"
-	"act/config"
-	"act/gh"
+	"github.com/kijimaD/act/config"
+	"github.com/kijimaD/act/gh"
 )
 
 type Scrape struct {
