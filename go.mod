@@ -3,6 +3,7 @@ module act
 go 1.19
 
 require (
+	github.com/go-git/go-git/v5 v5.4.2
 	github.com/go-yaml/yaml v2.1.0+incompatible
 	github.com/google/go-github/v47 v47.1.0
 	github.com/hasura/go-graphql-client v0.8.1
@@ -17,7 +18,6 @@ require (
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/go-git/gcfg v1.5.0 // indirect
 	github.com/go-git/go-billy/v5 v5.3.1 // indirect
-	github.com/go-git/go-git/v5 v5.4.2 // indirect
 	github.com/golang/protobuf v1.3.5 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
