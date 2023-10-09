@@ -3,6 +3,7 @@ package scrape
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/google/go-github/v47/github"
 	"github.com/hasura/go-graphql-client"
@@ -24,7 +25,10 @@ func NewScrape(config config.Config) *Scrape {
 func (s *Scrape) Execute() *Scrape {
 	client := gh.New(s.config).Client
 	opt := &github.RepositoryListOptions{
-		ListOptions: github.ListOptions{PerPage: 100},
+		ListOptions: github.ListOptions{
+			PerPage: 100,
+			Page:    1,
+		},
 	}
 
 	for {
@@ -35,12 +39,14 @@ func (s *Scrape) Execute() *Scrape {
 		for _, r := range repos {
 			commitCount := s.commitCount(*r.Name, *r.DefaultBranch)
 			s.Repos = append(s.Repos, NewRepo(r, commitCount))
+			time.Sleep(500 * time.Millisecond)
 		}
 
 		// pagination
 		if resp.NextPage == 0 {
 			break
 		}
+		opt.Page = resp.NextPage
 	}
 	return s
 }
